@@ -22,4 +22,4 @@
 //     });
 // }
 
-export * from "./diesel-monaco";
+export const Foo = "Bar";
