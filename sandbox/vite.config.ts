@@ -4,11 +4,11 @@ import { defineConfig } from 'vite';
 export default defineConfig({
 
     "optimizeDeps": {
-        "include": ["@diesel-parsers/monaco"],
+        "include": ["@diesel-parser/monaco"],
     },
     "build": {
         "commonjsOptions": {
-            "include": [/@diesel-parsers\/monaco/, /node_modules/],
+            "include": [/@diesel-parser\/monaco/, /node_modules/],
         },
     },
     server: {

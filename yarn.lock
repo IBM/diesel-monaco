@@ -2,8 +2,8 @@
 # yarn lockfile v1
 
 
-"@diesel-parser/monaco@file:monaco":
-  version "0.1.0"
+"@diesel-parser/monaco@file:monaco/dist":
+  version "0.0.0"
 
 "@diesel-parser/samples@~0.15.0":
   version "0.15.0"
