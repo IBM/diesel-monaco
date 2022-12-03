@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@diesel-parser/monaco": "file:../monaco/dist",
+    "@diesel-parser/monaco": "~0.1.0",
     "@diesel-parser/samples": "~0.15.0",
     "monaco-editor": "^0.34.1",
     "monaco-editor-workers": "0.34.2",
