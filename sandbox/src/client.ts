@@ -20,19 +20,17 @@ import 'monaco-editor/esm/vs/editor/standalone/browser/toggleHighContrast/toggle
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 import * as vscode from 'vscode';
 
-import { buildWorkerDefinition } from 'monaco-editor-workers';
+import {buildWorkerDefinition} from 'monaco-editor-workers';
 
-// import { getLanguageService, TextDocument } from 'vscode-json-languageservice';
-// import { createConverter as createCodeConverter } from 'vscode-languageclient/lib/common/codeConverter.js';
-import { createConverter as createProtocolConverter } from 'vscode-languageclient/lib/common/protocolConverter.js';
-import { StandaloneServices } from 'vscode/services';
+import {createConverter as createProtocolConverter} from 'vscode-languageclient/lib/common/protocolConverter.js';
+import {StandaloneServices} from 'vscode/services';
 import getMessageServiceOverride from 'vscode/service-override/messages';
-import { TextDocument } from 'vscode-languageserver-textdocument';
-import { CompletionItemKind, Diagnostic, DiagnosticSeverity } from 'vscode-languageserver-protocol';
-import { DieselParserFacade } from '@diesel-parser/ts-facade';
+import {TextDocument} from 'vscode-languageserver-textdocument';
+import {Diagnostic, DiagnosticSeverity} from 'vscode-languageserver-protocol';
+import {DieselParserFacade} from '@diesel-parser/ts-facade';
 
 // @ts-ignore
-import { DieselSamples } from '@diesel-parser/samples';
+import {DieselSamples} from '@diesel-parser/samples';
 import {registerCompletion, registerSemanticHighlight} from "@diesel-parser/monaco";
 
 StandaloneServices.initialize({
