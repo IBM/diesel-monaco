@@ -6,10 +6,7 @@
   "dependencies": {
     "@diesel-parser/monaco": "~0.1.0",
     "@diesel-parser/samples": "~0.15.0",
-    "monaco-editor": "^0.34.1",
-    "monaco-editor-workers": "0.34.2",
-    "monaco-languageclient": "4.0.2",
-    "vscode-json-languageservice": "5.1.3"
+    "monaco-editor-workers": "0.34.2"
   },
   "devDependencies": {
     "path": "^0.12.7",
