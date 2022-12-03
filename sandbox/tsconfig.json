@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "declarationDir": "dist",
+    "moduleResolution": "node",
+    "target": "ES2022",
+    "module": "ES2022",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    // Enable project compilation
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "inlineSources": false,
+    "stripInternal": true,
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "importHelpers": true,
+    "downlevelIteration": false,
+    "noImplicitReturns": true,
+    "noUnusedParameters": true,
+    "noUnusedLocals": true,
+     // Skip type checking of declaration files.
+    "skipLibCheck": true,
+     // Disallow inconsistently-cased references to the same file
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitOverride": true
+  },
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "dist"
+  ]
+}

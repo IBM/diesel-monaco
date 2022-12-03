@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "workspaces": [
-    "monaco"
+    "monaco",
+    "sandbox"
   ],
   "devDependencies": {
     "typescript": "4.8.4"
