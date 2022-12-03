@@ -33,12 +33,13 @@ import { DieselParserFacade } from '@diesel-parser/ts-facade';
 
 // @ts-ignore
 import { DieselSamples } from '@diesel-parser/samples';
-import { Yalla } from "@diesel-parser/monaco";
+import {YA_LA, Yalla} from "@diesel-parser/monaco";
 
 const x: Yalla = {
     x: 123
 };
 console.log("yalla", x);
+console.log("yalla2", YA_LA);
 
 StandaloneServices.initialize({
     ...getMessageServiceOverride(document.body)

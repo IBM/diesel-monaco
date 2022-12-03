@@ -2,6 +2,9 @@
 # yarn lockfile v1
 
 
+"@diesel-parser/monaco@file:monaco":
+  version "0.1.0"
+
 "@diesel-parser/samples@~0.15.0":
   version "0.15.0"
   resolved "https://registry.yarnpkg.com/@diesel-parser/samples/-/samples-0.15.0.tgz#4dfcd4082515d66bc603b46ad0b78bddc0a951cf"
