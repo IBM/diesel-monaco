@@ -33,13 +33,12 @@ import { DieselParserFacade } from '@diesel-parser/ts-facade';
 
 // @ts-ignore
 import { DieselSamples } from '@diesel-parser/samples';
+import { Yalla } from "@diesel-parser/monaco";
 
-import { Yolo } from '@diesel-parser/monaco';
-
-const x: Yolo = {
-    foo: "bar"
+const x: Yalla = {
+    x: 123
 };
-console.log("biloute", x);
+console.log("yalla", x);
 
 StandaloneServices.initialize({
     ...getMessageServiceOverride(document.body)
