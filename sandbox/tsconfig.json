@@ -21,7 +21,7 @@
     "downlevelIteration": false,
     "noImplicitReturns": true,
     "noUnusedParameters": true,
-    "noUnusedLocals": true,
+//    "noUnusedLocals": true,
      // Skip type checking of declaration files.
     "skipLibCheck": true,
      // Disallow inconsistently-cased references to the same file

@@ -7,7 +7,9 @@
   "dependencies": {
   },
   "devDependencies": {
-    "rimraf": "^3.0.2"
+    "rimraf": "^3.0.2",
+    "@types/vscode": "~1.69.1",
+    "@diesel-parser/ts-facade": "~0.15.0"
   },
   "scripts": {
     "clean": "rimraf dist",

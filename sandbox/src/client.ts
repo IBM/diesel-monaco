@@ -33,9 +33,7 @@ import { DieselParserFacade } from '@diesel-parser/ts-facade';
 
 // @ts-ignore
 import { DieselSamples } from '@diesel-parser/samples';
-import {Foo} from "@diesel-parser/monaco";
-
-console.log("yalla", Foo);
+import {registerCompletion, registerSemanticHighlight} from "@diesel-parser/monaco";
 
 StandaloneServices.initialize({
     ...getMessageServiceOverride(document.body)
@@ -58,7 +56,7 @@ monaco.languages.register({
 });
 
 // create the Monaco editor
-const value = `a duck is a concept.`;
+const value = `a duck is a concept`;
 const model = monaco.editor.createModel(value, LANGUAGE_ID, MONACO_URI);
 monaco.editor.create(document.getElementById('container')!, {
     model,
@@ -75,34 +73,6 @@ monaco.editor.create(document.getElementById('container')!, {
 
 const vscodeDocument = vscode.workspace.textDocuments[0];
 
-function createDocument(vscodeDocument: vscode.TextDocument) {
-    return TextDocument.create(MODEL_URI, vscodeDocument.languageId, vscodeDocument.version, vscodeDocument.getText());
-}
-
-// @ts-ignore
-const dieselParser: DieselParserFacade = DieselSamples.createBmdParser();
-
-const pendingValidationRequests = new Map<string, number>();
-
-vscode.languages.registerCompletionItemProvider(LANGUAGE_ID, {
-    async provideCompletionItems(vscodeDocument, position, _token, _context) {
-        const document = createDocument(vscodeDocument);
-        const predictRequest = { text: document.getText(), offset: document.offsetAt(position) };
-        const predictResult = dieselParser.predict(predictRequest);
-        if (!predictResult.success) {
-            console.error("unable to predict", predictResult.error);
-            return;
-        }
-        return predictResult.proposals.map(p => {
-			return {
-				label: p.text,
-				kind: CompletionItemKind.Text,
-				data: p,
-			};
-		}); 
-    }
-});
-
 function getTokenType(styleName: string): string | undefined {
     switch (styleName) {
         case "number":
@@ -116,44 +86,27 @@ function getTokenType(styleName: string): string | undefined {
 }
 
 const tokenTypes = ['number', 'string', 'keyword', 'property'];
-const tokenModifiers: string[] = [];
-const legend = new vscode.SemanticTokensLegend(tokenTypes, tokenModifiers);
 
-vscode.languages.registerDocumentSemanticTokensProvider(LANGUAGE_ID, {
-    async provideDocumentSemanticTokens(document) {
+function createDocument(vscodeDocument: vscode.TextDocument) {
+    return TextDocument.create(MODEL_URI, vscodeDocument.languageId, vscodeDocument.version, vscodeDocument.getText());
+}
 
-		const parseRequest = { text: document.getText() };
-		const parseResult = dieselParser.parse(parseRequest);
-		const builder = new vscode.SemanticTokensBuilder(legend);
-		if (parseResult.success) {
-			// it's ok, look for styles
-			parseResult.styles.forEach(style => {
-				const tokenType = getTokenType(style.name);
-                if (tokenType) {
-                    builder.push(
-                        new vscode.Range(
-                            document.positionAt(style.offset), 
-                            document.positionAt(style.offset + style.length)
-                        ),
-                        tokenType
-                    )
-                }                
-			});
-		} else {
-			// parsing error
-			console.error("Unhandled parsing error, styles will not be available");
-		}
-		return builder.build();
-    }
-}, {
-    tokenTypes,
-    tokenModifiers: []
-});
+// @ts-ignore
+const dieselParser: DieselParserFacade = DieselSamples.createBmdParser();
+
+registerCompletion(MODEL_URI, LANGUAGE_ID, () => dieselParser);
+registerSemanticHighlight(LANGUAGE_ID, () => dieselParser, tokenTypes, getTokenType);
+
+const pendingValidationRequests = new Map<string, number>();
 
 model.onDidChangeContent((_event) => {
     validate();
 });
 validate();
+// debugger;
+// dieselMonaco.validate(vscodeDocument);
+
+
 
 function validate(): void {
     const document = createDocument(vscodeDocument);
@@ -178,7 +131,7 @@ const SEV_MAP: { [key: string]: DiagnosticSeverity } = {
 	"error": DiagnosticSeverity.Error
 };
 
-const diagnosticCollection = vscode.languages.createDiagnosticCollection('json');
+const diagnosticCollection = vscode.languages.createDiagnosticCollection('diesel');
 function doValidate(document: TextDocument): void {
 
     const text = document.getText();
