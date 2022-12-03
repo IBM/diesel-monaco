@@ -28,7 +28,7 @@ const LANGUAGE_ID = 'bmd';
 const MODEL_URI = 'inmemory://model.bmd';
 const MONACO_URI = monaco.Uri.parse(MODEL_URI);
 
-// register the JSON language with Monaco
+// register the language with Monaco
 monaco.languages.register({
     id: LANGUAGE_ID,
     extensions: ['.bmd'],
