@@ -1,0 +1,11 @@
+{
+  "name": "diesel-lsp-parent",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "monaco"
+  ],
+  "devDependencies": {
+    "typescript": "4.8.4"
+  }
+}
