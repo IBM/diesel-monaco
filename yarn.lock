@@ -2,15 +2,15 @@
 # yarn lockfile v1
 
 
-"@diesel-parser/samples@~0.15.0":
-  version "0.15.0"
-  resolved "https://registry.yarnpkg.com/@diesel-parser/samples/-/samples-0.15.0.tgz#4dfcd4082515d66bc603b46ad0b78bddc0a951cf"
-  integrity sha512-3UXuhb2H0wcbqcZgQlCmbxRK83+2mqrrngNHKlWu+/9ksZ0I/e2H039DDSrzFoe5D1n1HFM0pFXAffFtWMjzEQ==
+"@diesel-parser/samples@~0.16.1":
+  version "0.16.1"
+  resolved "https://registry.yarnpkg.com/@diesel-parser/samples/-/samples-0.16.1.tgz#e501549291d308e5c63926ae0e09cd0f67874b59"
+  integrity sha512-s2S6zrLI8daOxUVwML4XR6vziQO/ifvzUioDfYJ1DMfaGirn7TO11Bb7U/NTdmfW5gMP/cR9Hn2tTND+ergybg==
 
-"@diesel-parser/ts-facade@~0.15.0":
-  version "0.15.0"
-  resolved "https://registry.yarnpkg.com/@diesel-parser/ts-facade/-/ts-facade-0.15.0.tgz#e3628aa6042e529aa7933e437d53947767ae9da1"
-  integrity sha512-++FeKiKV236EPybd/PuOBJx2yPMwPClE7nhQEWEFvF246dKMSm5AL5rJSmFgOFhk9MoHL+2ohRndqUO267hqOQ==
+"@diesel-parser/ts-facade@~0.16.1":
+  version "0.16.1"
+  resolved "https://registry.yarnpkg.com/@diesel-parser/ts-facade/-/ts-facade-0.16.1.tgz#bb8822355d22865bd9502348376760d83db02564"
+  integrity sha512-yWSAc3gel7V35JCA+H3qiG83DSrCEDGEwieyvpasGw0xMgFKTLFpnkNjZwFkgcPCd4MXpT00aHOgyCh7M65Olw==
 
 "@esbuild/android-arm@0.15.16":
   version "0.15.16"
