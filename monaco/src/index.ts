@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { CompletionItemKind} from 'vscode-languageserver-protocol';
-import {DieselParserFacade} from "@diesel-parser/ts-facade";
+import {DieselParserFacade, ParseRequest, PredictRequest} from "@diesel-parser/ts-facade";
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import {Diagnostic, DiagnosticSeverity} from 'vscode-languageserver-protocol';
 import {createConverter as createProtocolConverter} from 'vscode-languageclient/lib/common/protocolConverter.js';
@@ -11,18 +11,65 @@ StandaloneServices.initialize({
     ...getMessageServiceOverride(document.body)
 });
 
+export class DieselMonaco {
+
+    constructor(
+        readonly modelUri: string, 
+        readonly monacoUri: vscode.Uri,
+        readonly languageId: string,
+        readonly parser: () => DieselParserFacade,
+        readonly axiom: (() => string) | undefined,
+        readonly tokenTypes: string[],
+        readonly styleToToken: (styleName: string) => string | undefined,
+        readonly vscodeDocument: vscode.TextDocument
+        ) {
+
+    }
+
+    registerCompletion()  {
+        doRegisterCompletion(this.modelUri, this.languageId, this.parser, this.axiom);
+    }
+
+    registerSemanticHighlight() {
+        doRegisterSemanticHighlight(
+            this.languageId,
+            this.parser, 
+            this.tokenTypes,
+            this.styleToToken,
+            this.axiom
+        )
+    }
+
+    validateDocument() {
+        doValidateDocument(
+            this.modelUri, 
+            this.monacoUri, 
+            this.vscodeDocument,
+            this.parser(),
+            this.axiom ? this.axiom() : undefined
+        )
+    }
+
+}
+
+
 function createDocument(modelUri: string,vscodeDocument: vscode.TextDocument) {
     return TextDocument.create(modelUri, vscodeDocument.languageId, vscodeDocument.version, vscodeDocument.getText());
 }
 
-export function registerCompletion(
+function doRegisterCompletion(
     modelUri: string,
     languageId: string,
-    parser: () => DieselParserFacade) {
+    parser: () => DieselParserFacade,
+    axiom: (() => string) | undefined) {
         vscode.languages.registerCompletionItemProvider(languageId, {
             async provideCompletionItems(vscodeDocument, position, _token, _context) {
                 const document = createDocument(modelUri, vscodeDocument);
-                const predictRequest = { text: document.getText(), offset: document.offsetAt(position) };
+                const predictRequest: PredictRequest = { 
+                    text: document.getText(), 
+                    offset: document.offsetAt(position),
+                    axiom: axiom ? axiom() : undefined
+                };
                 const predictResult = parser().predict(predictRequest);
                 if (!predictResult.success) {
                     console.error("unable to predict", predictResult.error);
@@ -39,15 +86,19 @@ export function registerCompletion(
         });
     }
 
-export function registerSemanticHighlight(
+function doRegisterSemanticHighlight(
     languageId: string,
     parser: () => DieselParserFacade,
     tokenTypes: string[],
-    styleToToken: (styleName:string) => string | undefined) {
+    styleToToken: (styleName:string) => string | undefined,
+    axiom: (() => string) | undefined) {
         const legend = new vscode.SemanticTokensLegend(tokenTypes, []);
         vscode.languages.registerDocumentSemanticTokensProvider(languageId, {
             async provideDocumentSemanticTokens(document) {
-                const parseRequest = { text: document.getText() };
+                const parseRequest: ParseRequest = { 
+                    text: document.getText(),
+                    axiom: axiom ? axiom() : undefined
+                };
                 const parseResult = parser().parse(parseRequest);
                 const builder = new vscode.SemanticTokensBuilder(legend);
                 if (parseResult.success) {
@@ -55,15 +106,15 @@ export function registerSemanticHighlight(
                     parseResult.styles.forEach(style => {
                         const tokenType = styleToToken(style.name);
                         if (tokenType) {
-                            builder.push(
-                                new vscode.Range(
-                                    document.positionAt(style.offset),
-                                document.positionAt(style.offset + style.length)
-                            ),
-                            tokenType
-                        )
-                    }
-                });
+                            // ranges cannot span more than one line
+                            const p1 = document.positionAt(style.offset);
+                            const p2 = document.positionAt(style.offset + style.length);
+                            if (p1.line === p2.line) {
+                                const r = new vscode.Range(p1, p2);
+                                builder.push(r, tokenType);
+                            }
+                        }
+                    });
                 } else {
                     // parsing error
                     console.error("Unhandled parsing error, styles will not be available");
@@ -79,12 +130,18 @@ export function registerSemanticHighlight(
 
 const pendingValidationRequests = new Map<string, number>();
 
-export function validate(modelUri: string, monacoUri: vscode.Uri, vscodeDocument: vscode.TextDocument, parser: DieselParserFacade): void {
+function doValidateDocument(
+    modelUri: string, 
+    monacoUri: vscode.Uri, 
+    vscodeDocument: vscode.TextDocument, 
+    parser: DieselParserFacade,
+    axiom: string | undefined): void {
+
     const document = createDocument(modelUri, vscodeDocument);
     cleanPendingValidation(document);
     pendingValidationRequests.set(document.uri, window.setTimeout(() => {
         pendingValidationRequests.delete(document.uri);
-        doValidate(monacoUri, parser, document);
+        doValidate(monacoUri, document, parser, axiom);
     }));
 }
 
@@ -105,7 +162,11 @@ const SEV_MAP: { [key: string]: DiagnosticSeverity } = {
 const protocolConverter = createProtocolConverter(undefined, true, true);
 const diagnosticCollection = vscode.languages.createDiagnosticCollection('diesel');
 
-function doValidate(monacoUri: vscode.Uri, parser: DieselParserFacade, document: TextDocument): void {
+function doValidate(
+    monacoUri: vscode.Uri, 
+    document: TextDocument,
+    parser: DieselParserFacade, 
+    axiom: string | undefined): void {
 
     const text = document.getText();
     if (text.length === 0) {
@@ -113,7 +174,11 @@ function doValidate(monacoUri: vscode.Uri, parser: DieselParserFacade, document:
         return;
     }
 
-    const parseResult = parser.parse({text});
+    const parseRequest: ParseRequest = {
+        text, 
+        axiom
+    }
+    const parseResult = parser.parse(parseRequest);
     if (!parseResult.success) {
         console.error("unable to parse", parseResult.error);
         return;

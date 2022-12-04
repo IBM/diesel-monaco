@@ -20,7 +20,7 @@ import {DieselParserFacade} from '@diesel-parser/ts-facade';
 
 // @ts-ignore
 import {DieselSamples} from '@diesel-parser/samples';
-import {registerCompletion, registerSemanticHighlight, validate} from "@diesel-parser/monaco";
+import {DieselMonaco} from '@diesel-parser/monaco';
 
 buildWorkerDefinition('dist', new URL('', window.location.href).href, false);
 
@@ -37,7 +37,11 @@ monaco.languages.register({
 });
 
 // create the Monaco editor
-const value = `a duck is a concept`;
+
+const value = `start with a MyClass.
+a MyClass is a concept.
+a MyClass has a foo (text).`;
+
 const model = monaco.editor.createModel(value, LANGUAGE_ID, MONACO_URI);
 monaco.editor.create(document.getElementById('container')!, {
     model,
@@ -54,27 +58,47 @@ monaco.editor.create(document.getElementById('container')!, {
 
 const vscodeDocument = vscode.workspace.textDocuments[0];
 
-function getTokenType(styleName: string): string | undefined {
-    switch (styleName) {
-        case "number":
-        case "string":
-        case "keyword":
-            return styleName;
-        case "attr":
-            return "property";
-    }
-    return undefined;
-}
-
-const tokenTypes = ['number', 'string', 'keyword', 'property'];
-
 // @ts-ignore
 const dieselParser: DieselParserFacade = DieselSamples.createBmdParser();
 
-registerCompletion(MODEL_URI, LANGUAGE_ID, () => dieselParser);
-registerSemanticHighlight(LANGUAGE_ID, () => dieselParser, tokenTypes, getTokenType);
-
+const dieselMonaco = new DieselMonaco(
+    MODEL_URI,
+    MONACO_URI,
+    LANGUAGE_ID,
+    () => dieselParser,
+    () => "aCompileUnit",
+    ['keyword', 'type', 'enumMember'],
+    getTokenType,
+    vscodeDocument
+);
+dieselMonaco.registerCompletion();
+dieselMonaco.registerSemanticHighlight();
 model.onDidChangeContent((_event) => {
-    validate(MODEL_URI, MONACO_URI, vscodeDocument, dieselParser);
+    dieselMonaco.validateDocument();
 });
-validate(MODEL_URI, MONACO_URI, vscodeDocument, dieselParser);
+dieselMonaco.validateDocument();
+
+
+// function getTokenType(styleName: string): string | undefined {
+//     switch (styleName) {
+//         case "number":
+//         case "string":
+//         case "keyword":
+//             return styleName;
+//         case "attr":
+//             return "property";
+//     }
+//     return undefined;
+// }
+
+function getTokenType(styleName: string): string | undefined {
+    switch (styleName) {
+        case "keyword":
+            return styleName;
+        case "builtin-type":
+            return "type";
+        case "domain-value":
+            return "enumMember"
+    }
+    return undefined;
+}
