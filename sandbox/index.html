@@ -5,12 +5,13 @@
     <title>Diesel/Monaco</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <%= htmlWebpackPlugin.tags.headTags %>
 </head>
 
 
 <body>
 	<h2>Diesel/Monaco</h2>
 	<div id="container" style="width:800px;height:300px;border:1px solid grey"></div>
-	<script type="module" src="./src/client.ts"></script>
+    <%= htmlWebpackPlugin.tags.bodyTags %>
 </body>
 </html>

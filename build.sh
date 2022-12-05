@@ -2,4 +2,4 @@
 
 yarn install && \
 yarn --cwd monaco build && \
-yarn --cwd sandbox build
+yarn --cwd sandbox bundle

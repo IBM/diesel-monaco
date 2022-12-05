@@ -22,7 +22,7 @@ import {DieselParserFacade} from '@diesel-parser/ts-facade';
 import {DieselSamples} from '@diesel-parser/samples';
 import {DieselMonaco} from '@diesel-parser/monaco';
 
-buildWorkerDefinition('dist', new URL('', window.location.href).href, false);
+buildWorkerDefinition('', new URL('', window.location.href).href, false);
 
 const LANGUAGE_ID = 'bmd';
 const MODEL_URI = 'inmemory://model.bmd';
