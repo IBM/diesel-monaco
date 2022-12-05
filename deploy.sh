@@ -1,3 +1,3 @@
 #!/bin/bash
 
-yarn --cwd monaco publish
+yarn --cwd monaco --access public publish
