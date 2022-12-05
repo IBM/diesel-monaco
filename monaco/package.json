@@ -1,7 +1,16 @@
 {
   "name": "@diesel-parser/monaco",
   "version": "0.1.0",
-  "private": true,
+  "description": "Facade types for using diesel parsers in typescript",
+  "author": "Rémi Van Keisbelck <remi@rvkb.com>",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:IBM/diesel-core"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "dependencies": {
@@ -12,12 +21,14 @@
   "devDependencies": {
     "rimraf": "^3.0.2",
     "@types/vscode": "~1.69.1",
-    "@diesel-parser/ts-facade": "~0.16.2"
+    "@diesel-parser/ts-facade": "~0.16.2",
+    "gh-pages": "^3.1.0"
   },
   "scripts": {
     "clean": "rimraf dist",
     "lint": "eslint src --ext .ts",
     "compile": "tsc",
-    "build": "npm run clean && npm run compile"
+    "build": "npm run clean && npm run compile",
+    "gh-pages": "gh-pages -d build -m 'demo [ci skip]'"
   }
 }

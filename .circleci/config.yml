@@ -1,0 +1,67 @@
+version: 2
+
+defaults: &defaults
+  working_directory: ~/repo
+  docker:
+    - image: circleci/node:gallium
+
+jobs:
+  build:
+    <<: *defaults
+
+    steps:
+      - checkout
+      - run: ./build.sh
+      - persist_to_workspace:
+          root: ~/repo
+          paths: .
+
+  docs-deploy:
+    <<: *defaults
+
+    steps:
+      - attach_workspace:
+          at: ~/repo
+      - run:
+          name: Add github.com to known hosts
+          command: mkdir ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
+      - run: git config user.email "decisions-sonatype@ibm.com"
+      - run: git config user.name "decisions-sonatype"
+      - run:
+          name: Deploy docs to gh-pages branch
+          command: cd sandbox && yarn gh-pages          
+
+  deploy:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/repo
+      - run:
+          name: Authenticate with registry
+          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/repo/.npmrc
+      - run: ./deploy.sh
+
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build:
+          filters:
+            tags:
+              only: /\d+\.\d+\.\d+/
+      - docs-deploy:
+          requires:
+            - build
+            - webtests
+          filters:
+            branches:
+              only: main
+      - deploy:
+          requires:
+            - build
+          filters:
+            tags:
+              only: /\d+\.\d+\.\d+/
+            branches:
+              ignore: /.*/
+
