@@ -26,6 +26,7 @@
     "watch": "tsc -w",
     "copy:monacoworkers": "shx mkdir -p dist && shx cp -r ../node_modules/monaco-editor-workers/dist/workers/editorWorker* ./dist",
     "build": "npm run clean && npm run compile && npm run copy:monacoworkers",
-    "dev": "vite  --force"
+    "dev": "vite  --force",
+    "bundle": "vite build"
   }
 }

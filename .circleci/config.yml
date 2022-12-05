@@ -52,7 +52,6 @@ workflows:
       - docs-deploy:
           requires:
             - build
-            - webtests
           filters:
             branches:
               only: main
