@@ -1,12 +1,13 @@
 Monaco editor plugins for Diesel.
 
-# Build / Test
+# Build
 
 You'll need node (gallium) and yarn installed. 
 
-    yarn install
-    cd monaco
-    yarn build
-    cd ../sandbox
-    yarn build
-    yarn dev
+    ./build.sh
+
+# Dev
+
+Same as build, then
+
+    yarn start
