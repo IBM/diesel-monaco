@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { CompletionItemKind} from 'vscode-languageserver-protocol';
-import {DieselParserFacade, ParseRequest, PredictRequest} from "@diesel-parser/ts-facade";
+import {DieselCompletionProposal, DieselParserFacade, ParseRequest, PredictRequest} from "@diesel-parser/ts-facade";
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import {Diagnostic, DiagnosticSeverity} from 'vscode-languageserver-protocol';
 import {createConverter as createProtocolConverter} from 'vscode-languageclient/lib/common/protocolConverter.js';
@@ -77,7 +77,7 @@ function doRegisterCompletion(
                 }
                 return predictResult.proposals.map(p => {
                     return {
-                        label: p.text,
+                        label:getProposalText(p),
                         kind: CompletionItemKind.Text,
                         data: p,
                     };
@@ -85,6 +85,15 @@ function doRegisterCompletion(
             }
         });
     }
+
+function getProposalText(p: DieselCompletionProposal): string {
+    const lineFeed = p.text.indexOf("\n");{}
+    if (lineFeed === -1) {
+        return p.text;
+    } else {
+        return p.text.substring(0, lineFeed);
+    }
+}
 
 function doRegisterSemanticHighlight(
     languageId: string,
