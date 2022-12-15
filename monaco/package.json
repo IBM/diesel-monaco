@@ -1,6 +1,6 @@
 {
   "name": "@diesel-parser/monaco",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Facade types for using diesel parsers in typescript",
   "author": "Rémi Van Keisbelck <remi@rvkb.com>",
   "license": "Apache-2.0",
