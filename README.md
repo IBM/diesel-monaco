@@ -14,4 +14,4 @@ You'll need node (gallium) and yarn installed.
 
 Same as build, then
 
-    yarn start
+    yarn starttest
