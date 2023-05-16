@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@diesel-parser/monaco": "~0.1.1",
-    "@diesel-parser/samples": "~0.16.2",
+    "@diesel-parser/samples": "^0.17.0",
     "monaco-editor-workers": "0.34.2"
   },
   "devDependencies": {

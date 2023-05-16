@@ -76,10 +76,15 @@ function doRegisterCompletion(
                     return;
                 }
                 return predictResult.proposals.map(p => {
+                    const documentation = p.documentation!=undefined ? new vscode.MarkdownString(p.documentation) : undefined
+                    if (documentation) {
+                        documentation.supportHtml = true
+                    }
                     return {
                         label:getProposalText(p),
                         kind: CompletionItemKind.Text,
                         data: p,
+                        documentation
                     };
                 });
             }
