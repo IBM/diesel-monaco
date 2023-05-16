@@ -43,7 +43,7 @@ a MyClass is a concept.
 a MyClass has a foo (text).`;
 
 const model = monaco.editor.createModel(value, LANGUAGE_ID, MONACO_URI);
-monaco.editor.create(document.getElementById('container')!, {
+const monacoEditor = monaco.editor.create(document.getElementById('container')!, {
     model,
     glyphMargin: false,
     lightbulb: {
@@ -55,6 +55,8 @@ monaco.editor.create(document.getElementById('container')!, {
         enabled: false
     }
 });
+// WTF?
+(monacoEditor.getContribution("editor.contrib.suggestController") as any).widget.value._setDetailsVisible(true);
 
 const vscodeDocument = vscode.workspace.textDocuments[0];
 
