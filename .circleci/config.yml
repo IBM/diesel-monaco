@@ -3,7 +3,7 @@ version: 2
 defaults: &defaults
   working_directory: ~/repo
   docker:
-    - image: circleci/node:gallium
+    - image: circleci/node:jod
 
 jobs:
   build:
@@ -29,7 +29,7 @@ jobs:
       - run: git config user.name "decisions-sonatype"
       - run:
           name: Deploy docs to gh-pages branch
-          command: cd sandbox && yarn gh-pages          
+          command: cd sandbox && yarn gh-pages
 
   deploy:
     <<: *defaults
@@ -65,4 +65,3 @@ workflows:
               only: /v\d+\.\d+\.\d+/
             branches:
               ignore: /.*/
-
