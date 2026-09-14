@@ -3,7 +3,8 @@ version: 2
 defaults: &defaults
   working_directory: ~/repo
   docker:
-    - image: circleci/node:jod
+    - image: circleci/node@7.2.1
+  executor: node/default
 
 jobs:
   build:
